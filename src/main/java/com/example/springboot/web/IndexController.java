@@ -28,6 +28,7 @@ public class IndexController {
 
         if(user != null) {
             model.addAttribute("loginUserName", user.getName());
+            model.addAttribute("loginUserRole", user.getRole());
         }
         return "index";
     }
