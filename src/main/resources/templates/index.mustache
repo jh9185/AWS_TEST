@@ -1,41 +1,55 @@
 {{>layout/header}}
-    <h4>스프링 부트로 시작하는 웹 서비스 전기준바보</h4>
-    <div class="col-md-12">
-        <!-- 로그인 기능 영역 -->
-        <div class="row">
-            <div class="col-md-6">
-                <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
-                {{#loginUserName}}
+    <h4>버스 도착 시스템</h4>
+<div>
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark fixed-top">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" href="/">Start Bootstrap</a>
+            {{#loginUserName}}
+                <a class="navbar-brand ps-3">
                     Logged in as: <span id="user">{{loginUserName}}</span>
                     <a href="/logout" class="btn btn-into active" role="button">Logout</a>
-                {{/loginUserName}}
+                </a>
+            {{/loginUserName}}
+        <!-- 로그인 기능 영역 -->
+            <div class="col-md-6">
                 {{^loginUserName}}
                     <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
                     <a href="/oauth2/authorization/naver" class="btn btn-secondary active" role="button">Naver Login</a>
                 {{/loginUserName}}
             </div>
-        </div>
-        <br>
-        <!-- 목록 출력 영역 -->
-        <table class="table table-horizontal table-bordered">
-            <thead class="thead-strong">
+        <!-- Navbar Search-->
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            <div class="input-group">
+                <!--            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />-->
+                <!--            <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>-->
+            </div>
+        </form>
+    </nav>
+</div>
+<div class="col-md-12">
+    <br>
+    <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
+    <br>
+    <!-- 목록 출력 영역 -->
+    <table class="table table-horizontal table-bordered">
+        <thead class="thead-strong">
+        <tr>
+            <th>게시글번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>최종수정일</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        {{#posts}}
             <tr>
-                <th>게시글번호</th>
-                <th>제목</th>
-                <th>작성자</th>
-                <th>최종수정일</th>
+                <td>{{id}}</td>
+                <td><a href="/posts/update/{{id}}">{{title}}</a></td>
+                <td>{{author}}</td>
+                <td>{{modifiedDate}}</td>
             </tr>
-            </thead>
-            <tbody id="tbody">
-            {{#posts}}
-                <tr>
-                    <td>{{id}}</td>
-                    <td><a href="/posts/update/{{id}}">{{title}}</a></td>
-                    <td>{{author}}</td>
-                    <td>{{modifiedDate}}</td>
-                </tr>
-            {{/posts}}
-            </tbody>
-        </table>
-    </div>
+        {{/posts}}
+        </tbody>
+    </table>
+</div>
 {{>layout/footer}}
