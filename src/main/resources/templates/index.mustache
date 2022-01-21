@@ -14,20 +14,21 @@
 </div>
 <div class="col-md-12">
     <br>
-    <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
-    <!-- 로그인 기능 영역 -->
     <div class="col-md-6">
-        {{^loginUserName}}
-            <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
-            <a href="/oauth2/authorization/naver" class="btn btn-secondary active" role="button">Naver Login</a>
+        <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
+        <!-- 로그인 기능 영역 -->
+            {{^loginUserName}}
+                <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
+                <a href="/oauth2/authorization/naver" class="btn btn-secondary active" role="button">Naver Login</a>
+            {{/loginUserName}}
+
+        {{#loginUserName}}
+            <a class="navbar-brand ps-3">
+                Logged in as: <span id="user">{{loginUserName}}</span>
+                <a href="/logout" class="btn btn-into active" role="button">Logout</a>
+            </a>
         {{/loginUserName}}
     </div>
-    {{#loginUserName}}
-        <a class="navbar-brand ps-3">
-            Logged in as: <span id="user">{{loginUserName}}</span>
-            <a href="/logout" class="btn btn-into active" role="button">Logout</a>
-        </a>
-    {{/loginUserName}}
 
     <br>
     <!-- 목록 출력 영역 -->
