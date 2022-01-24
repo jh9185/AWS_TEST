@@ -2,12 +2,11 @@ package com.example.springboot.service.posts;
 
 import com.example.springboot.domain.posts.Posts;
 import com.example.springboot.domain.posts.PostsRepository;
-import com.example.springboot.web.dto.PostsListResponseDto;
-import com.example.springboot.web.dto.PostsResponseDto;
-import com.example.springboot.web.dto.PostsSaveRequestDto;
-import com.example.springboot.web.dto.PostsUpdateRequestDto;
+import com.example.springboot.web.dto.Posts.PostsListResponseDto;
+import com.example.springboot.web.dto.Posts.PostsResponseDto;
+import com.example.springboot.web.dto.Posts.PostsSaveRequestDto;
+import com.example.springboot.web.dto.Posts.PostsUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
