@@ -4,6 +4,7 @@ import com.example.springboot.config.auth.LoginUser;
 import com.example.springboot.config.auth.dto.SessionUser;
 import com.example.springboot.service.bus.BusService;
 import com.example.springboot.service.posts.PostsService;
+import com.example.springboot.web.dto.Bus.BusListResponseDto;
 import com.example.springboot.web.dto.Posts.PostsResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,7 @@ public class IndexController {
 
     @GetMapping("/bus/{busrouteid}")
     public String busSearch(@PathVariable Long busrouteid, Model model) throws IOException {
-            busService.busStationLoadData(busrouteid);
+        busService.busStationLoadData(busrouteid);
         return "/";
     }
 

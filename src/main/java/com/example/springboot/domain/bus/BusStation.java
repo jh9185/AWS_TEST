@@ -10,24 +10,32 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Bus extends BaseTimeEntity {
+public class BusStation extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String region;
-
-    @Column(length=500, nullable = false)
     private String name;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(nullable = false)
     private String number;
 
+    @Column(nullable = false)
+    private Long seq;
+
+    @Column(nullable = false)
+    private Long posx;
+
+    @Column(nullable = false)
+    private Long posy;
+
     @Builder
-    public Bus(String name, String number){
-        this.region = region;
+    public BusStation(String name, String number, Long seq, Long posx, Long posy){
         this.name = name;
         this.number = number;
+        this.seq = seq;
+        this.posx = posx;
+        this.posy = posy;
     }
 }
