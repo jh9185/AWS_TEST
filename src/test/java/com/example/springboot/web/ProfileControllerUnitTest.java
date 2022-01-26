@@ -1,8 +1,8 @@
 package com.example.springboot.web;
 
+import com.example.springboot.web.controller.ProfileController;
 import org.junit.Test;
 import org.springframework.mock.env.MockEnvironment;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

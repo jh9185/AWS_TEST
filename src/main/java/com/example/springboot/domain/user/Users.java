@@ -28,12 +28,16 @@ public class Users extends BaseTimeEntity {
     @Column(nullable = false)
     private Role role;
 
+    @Column
+    private String region;
+
     @Builder
-    public Users(String name, String email, String picture, Role role) {
+    public Users(String name, String email, String picture, Role role, String region) {
         this.name = name;
         this.email = email;
         this.picture = picture;
         this.role = role;
+        this.region = region;
     }
 
     public Users update(String name, String picture) {
@@ -41,6 +45,10 @@ public class Users extends BaseTimeEntity {
         this.picture = picture;
 
         return this;
+    }
+
+    public void updateRegion(String region){
+        this.region = region;
     }
 
     public String getRoleKey() {

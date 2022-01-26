@@ -1,15 +1,15 @@
 var main = {
     init : function () {
         var _this = this;
-        $('#btn-save').on('click', function () {
+        $('#btn-posts-save').on('click', function () {
             _this.save();
         });
 
-        $('#btn-update').on('click', function () {
+        $('#btn-posts-update').on('click', function () {
             _this.update();
         });
 
-        $('#btn-delete').on('click', function () {
+        $('#btn-posts-delete').on('click', function () {
             _this.delete();
         });
     },

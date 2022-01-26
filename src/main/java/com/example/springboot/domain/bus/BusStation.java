@@ -22,6 +22,9 @@ public class BusStation extends BaseTimeEntity {
     private String number;
 
     @Column(nullable = false)
+    private String region;
+
+    @Column(nullable = false)
     private Long seq;
 
     @Column(nullable = false)
@@ -34,6 +37,7 @@ public class BusStation extends BaseTimeEntity {
     public BusStation(String name, String number, Long seq, Long posx, Long posy){
         this.name = name;
         this.number = number;
+        this.region = region;
         this.seq = seq;
         this.posx = posx;
         this.posy = posy;

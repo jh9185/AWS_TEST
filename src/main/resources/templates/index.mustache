@@ -25,7 +25,12 @@
         {{#loginUserName}}
             <a class="navbar-brand ps-3">
                 Logged in as: <span id="user">{{loginUserName}}</span>
-                <a href="/logout" class="btn btn-into active" role="button">Logout</a>
+                {{#loginUserRegion}}
+                    지역 : {{loginUserRegion}}
+                {{/loginUserRegion}}
+
+                <a href="/user/update/" class="btn btn-secondary" role="button">회원 설정</a>
+                <a href="/logout" class="btn btn-light" role="button">Logout</a>
             </a>
         {{/loginUserName}}
     </div>
@@ -52,7 +57,5 @@
         {{/posts}}
         </tbody>
     </table>
-    {{#json}}
-    {{/json}}
 </div>
 {{>layout/footer}}
