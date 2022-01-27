@@ -24,6 +24,7 @@ public class UsersController {
     }
 
     @PostMapping("/user/update/{id}")
+    @ResponseBody
     public Long update(@PathVariable Long id, @RequestBody UsersUpdateRequestDto requestDto) {
         return userService.update(id, requestDto);
     }
