@@ -5,7 +5,9 @@ import com.example.springboot.domain.bus.Bus;
 import com.example.springboot.domain.bus.BusRepository;
 import com.example.springboot.domain.bus.BusStation;
 import com.example.springboot.domain.posts.Posts;
+import com.example.springboot.web.dto.Bus.BusListResponseDto;
 import com.example.springboot.web.dto.Bus.BusResponseDto;
+import com.example.springboot.web.dto.Posts.PostsListResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +17,15 @@ import org.json.XML;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -91,4 +96,10 @@ public class BusService {
 //        return new BusResponseDto(entity);
 //    }
 
+    @Transactional(readOnly = true)
+    public List<BusListResponseDto> findAllDesc() {
+        return busRepository.findAllDesc().stream()
+                .map(BusListResponseDto::new)
+                .collect(Collectors.toList());
+    }
 }

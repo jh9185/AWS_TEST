@@ -5,11 +5,12 @@ import com.example.springboot.web.dto.Posts.PostsResponseDto;
 import com.example.springboot.web.dto.Posts.PostsSaveRequestDto;
 import com.example.springboot.web.dto.Posts.PostsUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RestController
+@Controller
 public class PostsApiController {
     private final PostsService postsService;
 
@@ -35,11 +36,13 @@ public class PostsApiController {
     }
 
     @PostMapping("/api/v1/posts")
+    @ResponseBody
     public Long save(@RequestBody PostsSaveRequestDto requestDto) {
         return postsService.save(requestDto);
     }
 
     @PutMapping("/api/v1/posts/{id}")
+    @ResponseBody
     public Long update(@PathVariable Long id, @RequestBody PostsUpdateRequestDto requestDto) {
         return postsService.update(id, requestDto);
     }
@@ -50,6 +53,7 @@ public class PostsApiController {
         return id;
     }
     @GetMapping("/api/v1/posts/{id}")
+    @ResponseBody
     public PostsResponseDto findById(@PathVariable Long id) {
         return postsService.findById(id);
     }

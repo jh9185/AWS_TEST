@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 @Getter
 public class BusListResponseDto {
     private Long id;
+    private String region;
     private String name;
     private String number;
-    private Long   seq;
 
-    public BusListResponseDto(BusStation entity){
+    public BusListResponseDto(Bus entity){
         this.id = entity.getId();
+        this.region = entity.getRegion();
         this.name = entity.getName();
         this.number = entity.getNumber();
-        this.seq = entity.getSeq();
     }
 }

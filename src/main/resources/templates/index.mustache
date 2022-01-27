@@ -1,5 +1,5 @@
 {{>layout/header}}
-<div>
+
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark fixed-top">
         <!-- Navbar Brand-->
         <a class="navbar-brand ps-3" href="/">Start Bootstrap</a>
@@ -11,51 +11,94 @@
             </div>
         </form>
     </nav>
-</div>
-<div class="col-md-12">
-    <br>
-    <div class="col-md-6">
-        <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
-        <!-- 로그인 기능 영역 -->
+<br>
+<div id="layoutSidenav_content">
+    <main>
+        <div class="col-md-6">
+            <!-- 로그인 기능 영역 -->
             {{^loginUserName}}
                 <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
                 <a href="/oauth2/authorization/naver" class="btn btn-secondary active" role="button">Naver Login</a>
             {{/loginUserName}}
 
-        {{#loginUserName}}
-            <a class="navbar-brand ps-3">
-                Logged in as: <span id="user">{{loginUserName}}</span>
-                {{#loginUserRegion}}
-                    지역 : {{loginUserRegion}}
-                {{/loginUserRegion}}
+            {{#loginUserName}}
+                <a class="navbar-brand ps-3">
+                    Logged in as: <span id="user">{{loginUserName}}</span>
+                    {{#loginUserRegion}}
+                        지역 : {{loginUserRegion}}
+                    {{/loginUserRegion}}
 
-                <a href="/user/update/" class="btn btn-secondary" role="button">회원 설정</a>
-                <a href="/logout" class="btn btn-light" role="button">Logout</a>
-            </a>
-        {{/loginUserName}}
-    </div>
+                    <a href="/user/update/" class="btn btn-secondary" role="button">회원 설정</a>
+                    <a href="/logout" class="btn btn-light" role="button">Logout</a>
+                </a>
+            {{/loginUserName}}
+        </div>
+        <br>
+        <div class="container-fluid px-4">
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="col-md-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                게시글 목록
+                            </div>
+                            <div class="card-body">
+                                <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
+                                <table id="datatablesSimple" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>게시글번호</th>
+                                        <th>제목</th>
+                                        <th>작성자</th>
+                                        <th>글 작성시간</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#posts}}
+                                            <tr>
+                                                <td>{{id}}</td>
+                                                <td><a href="/posts/view/{{id}}">{{title}}</a></td>
+                                                <td>{{author}}</td>
+                                                <td>{{modifiedDate}}</td>
+                                            </tr>
+                                        {{/posts}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                버스 목록
+                            </div>
+                            <div class="card-body">
+                                <table id="datatablesSimple" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>지역코드</th>
+                                        <th>버스 ID</th>
+                                        <th>버스 번호</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {{#buslist}}
+                                        <tr>
+                                            <td>{{region}}</td>
+                                            <td><a href="/posts/view/{{id}}">{{name}}</a></td>
+                                            <td>{{number}}</td>
+                                        </tr>
+                                    {{/buslist}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <br>
-    <!-- 목록 출력 영역 -->
-    <table class="table table-horizontal table-bordered">
-        <thead class="thead-strong">
-        <tr>
-            <th>게시글번호</th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>최종수정일</th>
-        </tr>
-        </thead>
-        <tbody id="tbody">
-        {{#posts}}
-            <tr>
-                <td>{{id}}</td>
-                <td><a href="/posts/view/{{id}}">{{title}}</a></td>
-                <td>{{author}}</td>
-                <td>{{modifiedDate}}</td>
-            </tr>
-        {{/posts}}
-        </tbody>
-    </table>
+    </main>
 </div>
+
 {{>layout/footer}}

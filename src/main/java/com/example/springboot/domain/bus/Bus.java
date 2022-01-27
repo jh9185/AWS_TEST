@@ -25,7 +25,7 @@ public class Bus extends BaseTimeEntity {
     private String number;
 
     @Builder
-    public Bus(String name, String number){
+    public Bus(String region, String name, String number){
         this.region = region;
         this.name = name;
         this.number = number;

@@ -2,6 +2,7 @@ package com.example.springboot.web.controller;
 
 import com.example.springboot.config.auth.LoginUser;
 import com.example.springboot.config.auth.dto.SessionUser;
+import com.example.springboot.service.bus.BusService;
 import com.example.springboot.service.posts.PostsService;
 import com.example.springboot.service.users.UsersService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpSession;
 public class IndexController {
     private final UsersService userService;
     private final PostsService postsService;
+    private final BusService busService;
     private final HttpSession httpSession;
 
     @GetMapping("/")
@@ -25,8 +27,10 @@ public class IndexController {
         if (user != null) {
             model.addAttribute("loginUserName", user.getName());
 
-            if(user.getRegion() != "")
+            if(user.getRegion() != "") {
                 model.addAttribute("loginUserRegion", user.getRegion());
+                model.addAttribute("buslist", busService.findAllDesc());
+            }
         }
         return "index";
     }
