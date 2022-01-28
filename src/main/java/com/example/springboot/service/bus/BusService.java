@@ -5,10 +5,10 @@ import com.example.springboot.domain.bus.Bus;
 import com.example.springboot.domain.bus.BusRepository;
 import com.example.springboot.web.dto.Bus.BusListResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 
 import org.json.XML;
 import org.json.simple.JSONArray;
@@ -19,10 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -94,9 +91,9 @@ public class BusService {
     }
 
     // csv file load
-    public void readBusNumber(XSSFWorkbook workbook) throws IOException {
+    public void readBusNumber(InputStream inputStream) throws IOException {
 //        FileInputStream fis=new FileInputStream("C:\\Users\\KJH\\Downloads\\서울시 버스노선ID 정보(202105210).xlsx");
-//        XSSFWorkbook workbook=new XSSFWorkbook(fis);
+        XSSFWorkbook workbook=new XSSFWorkbook(inputStream);
 
         String region = "서울";
         List<Bus> busList = new ArrayList<Bus>();

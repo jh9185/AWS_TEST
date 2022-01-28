@@ -33,22 +33,24 @@ public class BusController {
 
     @SuppressWarnings("resource")
     @RequestMapping(value ="/bus/fileDBUpload", method=RequestMethod.POST)
-    public String insertUploadFile(MultipartHttpServletRequest request) throws Exception {
+    public String insertUploadFile(@LoginUser SessionUser user, MultipartHttpServletRequest request) throws Exception {
         try {
-            MultipartFile file = null;
-            Iterator<String> mIterator = request.getFileNames();
-            if(mIterator.hasNext()) {
-                file = request.getFile(mIterator.next());
-            }
-            // 엑셀파일 열기 (엑셀버전 2007 이상일때, 오픈방법)
-            OPCPackage opcPackage = OPCPackage.open(file.getInputStream());
-            XSSFWorkbook wb = new XSSFWorkbook(opcPackage);
+            if(user.getEmail().equals("rnjswogus@gmail.com")){
+                MultipartFile file = null;
+                Iterator<String> mIterator = request.getFileNames();
+                if(mIterator.hasNext()) {
+                    file = request.getFile(mIterator.next());
+                }
 
-            busService.readBusNumber(wb);
+                busService.readBusNumber(file.getInputStream());
+            }
+            else{
+                return "";
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "/";
+        return "";
     }
 }
