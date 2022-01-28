@@ -23,7 +23,7 @@
 
             {{#loginUserName}}
                 <a class="navbar-brand ps-3">
-                    Logged in as: <span id="user">{{loginUserName}}</span>
+                    <span id="user">{{loginUserName}}</span>님 로그인.
                     {{#loginUserRegion}}
                         지역 : <span id="user">{{loginUserRegion}}</span>
                     {{/loginUserRegion}}
@@ -44,7 +44,10 @@
                                 게시글 목록
                             </div>
                             <div class="card-body">
-                                <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
+                                {{#loginUserName}}
+                                    <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
+                                {{/loginUserName}}
+
                                 <table id="datatablesSimple" class="table table-hover">
                                     <thead>
                                     <tr>
@@ -73,7 +76,10 @@
                                 버스 목록
                             </div>
                             <div class="card-body">
-                                <table id="datatablesSimple" class="table table-hover">
+                                {{#loginUserName}}
+                                    <button type="button" class="btn btn-secondary" id="btn-index-bus-update">버스 정보 업데이트</button>
+                                {{/loginUserName}}
+                                    <table id="datatablesSimple" class="table table-hover">
                                     <thead>
                                     <tr>
                                         <th>지역코드</th>

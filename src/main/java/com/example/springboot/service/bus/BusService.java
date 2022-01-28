@@ -3,14 +3,11 @@ package com.example.springboot.service.bus;
 import com.example.springboot.Component.ApiComponent;
 import com.example.springboot.domain.bus.Bus;
 import com.example.springboot.domain.bus.BusRepository;
-import com.example.springboot.domain.bus.BusStation;
-import com.example.springboot.domain.posts.Posts;
 import com.example.springboot.web.dto.Bus.BusListResponseDto;
-import com.example.springboot.web.dto.Bus.BusResponseDto;
-import com.example.springboot.web.dto.Posts.PostsListResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.json.XML;
@@ -19,11 +16,17 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -90,16 +93,87 @@ public class BusService {
         return itemList;
     }
 
-//    public BusResponseDto findById (Long id) {
-//        Bus entity = BusRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id="+ id));
-//
-//        return new BusResponseDto(entity);
-//    }
+    // csv file load
+    public void readBusNumber() throws IOException {
+        FileInputStream fis=new FileInputStream("C:\\Users\\KJH\\Downloads\\서울시 버스노선ID 정보(202105210).xlsx");
+        XSSFWorkbook workbook=new XSSFWorkbook(fis);
+
+        String region = "서울";
+        List<Bus> busList = new ArrayList<Bus>();
+        int rowindex=0;
+        int columnindex=0;
+        //시트 수 (첫번째에만 존재하므로 0을 준다)
+        //만약 각 시트를 읽기위해서는 FOR문을 한번더 돌려준다
+        XSSFSheet sheet=workbook.getSheetAt(0);
+        //행의 수
+        int rows=sheet.getPhysicalNumberOfRows();
+
+        for(rowindex=1;rowindex<rows;rowindex++){
+            String name = "";
+            String number = "";
+            //행을읽는다
+            XSSFRow row=sheet.getRow(rowindex);
+
+            if(row !=null){
+                //셀의 수
+                int cells=row.getPhysicalNumberOfCells();
+                for(columnindex=0;columnindex<=cells;columnindex++){
+
+                    //셀값을 읽는다
+                    XSSFCell cell=row.getCell(columnindex);
+                    String value="";
+                    //셀이 빈값일경우를 위한 널체크
+                    if(cell==null){
+                        continue;
+                    }else{
+                        //타입별로 내용 읽기
+                        switch (cell.getCellType()){
+                            case FORMULA:
+                                value=cell.getCellFormula();
+                                break;
+                            case NUMERIC:
+                                value=cell.getNumericCellValue()+"";
+                                break;
+                            case STRING:
+                                value=cell.getStringCellValue()+"";
+                                if(value.equals("ROUTER_ID") || value.equals("노선명"))
+                                    continue;
+                                break;
+                            case BLANK:
+                                value=cell.getBooleanCellValue()+"";
+                                break;
+                            case ERROR:
+                                value=cell.getErrorCellValue()+"";
+                                break;
+                        }
+                        switch(columnindex){
+                            case 0:
+                                number = value;
+                                break;
+                            case 1:
+                                name = value;
+
+                                Bus bus = new Bus(region, name, number);
+                                busList.add(bus);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        busRepository.saveAll(busList);
+        return;
+    }
 
     @Transactional(readOnly = true)
     public List<BusListResponseDto> findAllDesc() {
         return busRepository.findAllDesc().stream()
                 .map(BusListResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteByRegion(String region) {
+        busRepository.deleteByRegion(region);
     }
 }
