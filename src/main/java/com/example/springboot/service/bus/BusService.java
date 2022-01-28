@@ -94,9 +94,9 @@ public class BusService {
     }
 
     // csv file load
-    public void readBusNumber() throws IOException {
-        FileInputStream fis=new FileInputStream("C:\\Users\\KJH\\Downloads\\서울시 버스노선ID 정보(202105210).xlsx");
-        XSSFWorkbook workbook=new XSSFWorkbook(fis);
+    public void readBusNumber(XSSFWorkbook workbook) throws IOException {
+//        FileInputStream fis=new FileInputStream("C:\\Users\\KJH\\Downloads\\서울시 버스노선ID 정보(202105210).xlsx");
+//        XSSFWorkbook workbook=new XSSFWorkbook(fis);
 
         String region = "서울";
         List<Bus> busList = new ArrayList<Bus>();

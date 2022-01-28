@@ -77,9 +77,13 @@
                             </div>
                             <div class="card-body">
                                 {{#loginUserName}}
-                                    <button type="button" class="btn btn-secondary" id="btn-index-bus-update">버스 정보 업데이트</button>
+                                    <form id="uploadFrm" enctype="multipart/form-data">
+                                        <p>데이터 업로드<br>엑셀파일만 업로드 가능(xls, xlsx)</p>
+                                        <input type="file" name="upFile" id="upFile" accept=".xlsx, .xls"/>
+                                    </form>
+<!--                                    <button type="button" class="btn btn-secondary" id="btn-index-bus-update">버스 정보 업데이트</button>-->
                                 {{/loginUserName}}
-                                    <table id="datatablesSimple" class="table table-hover">
+                                    <table id="busnumberlist" class="table table-hover">
                                     <thead>
                                     <tr>
                                         <th>지역코드</th>
