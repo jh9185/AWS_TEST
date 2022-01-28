@@ -28,19 +28,6 @@ public class BusController {
 
     @GetMapping("/bus/update")
     public String busUpdate(@LoginUser SessionUser user) throws IOException {
-        try{
-            if(user.getEmail().equals("rnjswogus@gmail.com")){
-//                busService.readBusNumber();
-            }
-            else{
-                return "권한이 없습니다";
-            }
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.toString());
-            return String.valueOf(e);
-        }
         return "/";
     }
 
