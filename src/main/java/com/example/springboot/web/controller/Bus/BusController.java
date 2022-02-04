@@ -35,7 +35,7 @@ public class BusController {
     @RequestMapping(value ="/bus/fileDBUpload", method=RequestMethod.POST)
     public String insertUploadFile(@LoginUser SessionUser user, MultipartHttpServletRequest request) throws Exception {
         try {
-            if(user.getEmail().equals("rnjswogus@gmail.com")){
+            if(user.getRole().getKey() == "ROLE_MASTER" ){
                 MultipartFile file = null;
                 Iterator<String> mIterator = request.getFileNames();
                 if(mIterator.hasNext()) {

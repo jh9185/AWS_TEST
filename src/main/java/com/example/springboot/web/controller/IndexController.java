@@ -23,13 +23,13 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model, @LoginUser SessionUser user) {
         model.addAttribute("posts", postsService.findAllDesc());
+        model.addAttribute("buslist", busService.findAllDesc());
 
         if (user != null) {
             model.addAttribute("loginUserName", user.getName());
 
             if(user.getRegion() != "") {
                 model.addAttribute("loginUserRegion", user.getRegion());
-                model.addAttribute("buslist", busService.findAllDesc());
             }
         }
         return "index";
