@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>버스 도착 웹서비스</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=t8y7kns73m"></script>
+    <script src="/js/app/naverMap.js"></script>
+</head>
+<body>
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark fixed-top">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3" href="/">Start Bootstrap</a>
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        <div class="input-group">
+            <!--            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />-->
+            <!--            <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>-->
+        </div>
+    </form>
+</nav>
+
+<div class="container">
+    <div id="map" style="width:100%;height:400px;">
+    </div>
+</div>
+    <script inline="javascript">
+        map = new naver.maps.Map('map', {
+            center: new naver.maps.LatLng(37.01245, 129.10203),
+            zoom: 14
+        });
+
+        let locations = new Array();
+        let markers = new Array();
+        let busmarkers = new Array();
+        let infoWindows = new Array();
+        let businfoWindows = new Array();
+        let polyline;
+        let polylinePaths = new Array();
+        let transValue = 0;
+        let pathCount = 0;
+        var list = new Array();
+        var stationInfo = new Array();
+
+        initCount();
+
+        {{#busPathList}}
+            insertPolyline(polylinePaths, {{gpsY}}, {{gpsX}});
+        {{/busPathList}}
+
+        {{#busStationList}}
+                insertLocation(locations, {{seq}}, {{gpsX}}, {{gpsY}});
+                insertMarker(markers, {{gpsX}}, {{gpsY}});
+                insertInfoWindow(infoWindows, {{seq}});
+        {{/busStationList}}
+
+        polyline = new naver.maps.Polyline({
+            map: map,
+            path: polylinePaths,
+            strokeColor: '#996ac5',
+            strokeStyle: 'solid',
+            strokeOpacity: 1,
+            strokeWeight: 4
+        });
+
+        for (let i=0, ii=markers.length; i<ii; i++) {
+            // console.log(markers[i] , getClickHandler(i));
+            naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i)); // 클릭한 마커 핸들러
+            naver.maps.Event.addListener(markers[i], 'mouseover', getClickHandler(i));
+        }
+        for (let i=0, ii=busmarkers.length; i<ii; i++) {
+            console.log(busmarkers[i] , getClickBusHandler(i));
+            naver.maps.Event.addListener(busmarkers[i], 'click', getClickBusHandler(i)); // 클릭한 마커 핸들러
+            naver.maps.Event.addListener(busmarkers[i], 'mouseover', getClickBusHandler(i));
+        }
+    </script>
+    <table id="busstationboard" class="table table-hover">
+        <thead>
+        <tr>
+            <th>정류장 순서</th>
+            <th>버스 번호</th>
+            <th>버스 이름</th>
+            <th>정류장 번호</th>
+            <th>정류장 이름</th>
+            <th>도착 정보</th>
+            <th>도착 버스번호</th>
+        </tr>
+        </thead>
+        <tbody>
+            {{#busStationList}}
+                <tr>
+                    <td>{{seq}}</td>
+                    <td>{{busRouteNm}}</td>
+                    <td>{{busRouteId}}</td>
+                    <td>{{stationNo}}</td>
+                    <td>{{stStationNm}}</td>
+                    <td>{{arrmsg1}} <br>
+                        {{arrmsg2}}</td>
+                    <td>{{plainNo1}} <br>
+                        {{plainNo2}}</td>
+                </tr>
+            {{/busStationList}}
+        </tbody>
+    </table>
+</div>
+
+{{>layout/maps}}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script id="dsq-count-scr" src="//springboot-web-2.disqus.com/count.js" async></script>
+</body>
+</html>

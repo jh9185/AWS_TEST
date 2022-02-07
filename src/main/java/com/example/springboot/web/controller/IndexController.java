@@ -15,10 +15,8 @@ import javax.servlet.http.HttpSession;
 @RequiredArgsConstructor
 @Controller
 public class IndexController {
-    private final UsersService userService;
     private final PostsService postsService;
     private final BusService busService;
-    private final HttpSession httpSession;
 
     @GetMapping("/")
     public String index(Model model, @LoginUser SessionUser user) {
