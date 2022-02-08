@@ -90,7 +90,6 @@ public class BusService {
         return itemList;
     }
     // 정류장 도착 정보 데이터 가져오기
-
     public JSONArray BusStationLoadArriveData(Long busRouteId){
         try {
             StringBuilder urlBuilder = new StringBuilder("http://ws.bus.go.kr/api/rest/arrive/getArrInfoByRouteAll?" +
@@ -205,6 +204,62 @@ public class BusService {
         return itemList;
     }
 
+    //실시간 버스 위치 가져오기
+    public JSONArray BusLoadPosData(Long busRouteId){
+        try {
+            StringBuilder urlBuilder = new StringBuilder("http://ws.bus.go.kr/api/rest/buspos/getBusPosByRtid?" +
+                    "serviceKey=" + ApiKey.getBusApiKey());
+            urlBuilder.append("&" + URLEncoder.encode("busRouteId", "UTF-8") + "=" + busRouteId.toString()); /**/
+            URL url = new URL(urlBuilder.toString());
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Content-type", "application/json");
+            System.out.println("Response code: " + conn.getResponseCode());
+            BufferedReader rd;
+            if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+                rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            } else {
+                rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            }
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = rd.readLine()) != null) {
+                sb.append(line);
+            }
+            rd.close();
+            conn.disconnect();
+            //Connect check log
+            //System.out.println(sb.toString());
+
+            org.json.JSONObject xmlJSONObj = XML.toJSONObject(sb.toString());
+            String xmlJSONObjString = xmlJSONObj.toString();
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject)jsonParser.parse(xmlJSONObjString);
+            JSONObject busStationInfoResult = (JSONObject)jsonObject.get("ServiceResult");
+            JSONObject busStationInfo = (JSONObject)busStationInfoResult.get("msgBody");
+
+            JSONArray itemList = (JSONArray)busStationInfo.get("itemList");
+
+//            for (int i =0; i<itemList.size(); i++){
+//                VehId vehId = new VehId("", 0, 0);
+//
+//                JSONObject detailInfo = (JSONObject)itemList.get(i);
+//
+//                vehId.setPlainNo((String) detailInfo.get("plainNo"));
+//                vehId.setPosX((Double) detailInfo.get("gpsX"));
+//                vehId.setPosY((Double) detailInfo.get("gpsY"));
+//
+//                VehIdList.add(vehId);
+//            }
+
+            return itemList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        JSONArray itemList = new JSONArray();
+        return itemList;
+    }
     // csv file load
     public void readBusNumber(InputStream inputStream) throws IOException {
 //        FileInputStream fis=new FileInputStream("C:\\Users\\KJH\\Downloads\\서울시 버스노선ID 정보(202105210).xlsx");

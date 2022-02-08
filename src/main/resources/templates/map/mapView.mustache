@@ -25,12 +25,13 @@
 <div class="container">
     <div id="map" style="width:100%;height:400px;">
     </div>
-</div>
     <script inline="javascript">
-        map = new naver.maps.Map('map', {
-            center: new naver.maps.LatLng(37.01245, 129.10203),
-            zoom: 14
-        });
+        {{#mapCenter}}
+            map = new naver.maps.Map('map', {
+                center: new naver.maps.LatLng({{gpsY}}, {{gpsX}}),
+                zoom: 14
+            });
+        {{/mapCenter}}
 
         let locations = new Array();
         let markers = new Array();
@@ -53,8 +54,13 @@
         {{#busStationList}}
                 insertLocation(locations, {{seq}}, {{gpsX}}, {{gpsY}});
                 insertMarker(markers, {{gpsX}}, {{gpsY}});
-                insertInfoWindow(infoWindows, {{seq}});
+                insertInfoWindow(infoWindows, {{seq}}, '{{stationNm}}');
         {{/busStationList}}
+
+        {{#busPosList}}
+            insertBusMarker(busmarkers, {{gpsY}}, {{gpsX}});
+            insertBusinfoWindows('{{plainNo}}');
+        {{/busPosList}}
 
         polyline = new naver.maps.Polyline({
             map: map,

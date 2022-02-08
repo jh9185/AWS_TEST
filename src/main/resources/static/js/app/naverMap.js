@@ -22,7 +22,7 @@ function insertMarker(markers, x, y) {
 }
 
 function insertInfoWindow(infoWindows, seq, stationNm) {
-    var myaddress = seq;
+    var myaddress = seq + " " + stationNm;
 
     //info
     let infoWindow = new naver.maps.InfoWindow({
@@ -55,7 +55,7 @@ function insertBusMarker(busmarkers, posX, posY) {
         position: position.destinationPoint(50, 15),
         map: map,
         icon: {
-            url: '../../../resources/static/icon/bus.png',
+            url: '/icon/bus.png',
             size: new naver.maps.Size(50, 50),
             origin: new naver.maps.Point(0, 0),
             anchor: new naver.maps.Point(25, 26)

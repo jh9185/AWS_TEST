@@ -3,7 +3,8 @@ package com.example.springboot.web.controller.Bus;
 import com.example.springboot.config.auth.LoginUser;
 import com.example.springboot.config.auth.dto.SessionUser;
 import com.example.springboot.service.bus.BusService;
-import com.example.springboot.web.dto.Bus.BusPath;
+import com.example.springboot.web.dto.Bus.BusPathDto;
+import com.example.springboot.web.dto.Bus.BusPosDto;
 import com.example.springboot.web.dto.Bus.BusStationInfoListDto;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,10 +34,12 @@ public class BusController {
     public String busStationSearch(@PathVariable Long busrouteid, Model model) throws IOException {
         JSONArray jsonArrayStation = busService.busStationLoadData(busrouteid);
         JSONArray jsonArrayArrive = busService.BusStationLoadArriveData(busrouteid);
-        JSONArray jsonArrayBusPos = busService.BusStationLoadPathData(busrouteid);
+        JSONArray jsonArrayBusPath = busService.BusStationLoadPathData(busrouteid);
+        JSONArray jsonArrayBusPos = busService.BusLoadPosData(busrouteid);
 
         List<BusStationInfoListDto> busStationInfoListDtoList = new ArrayList<BusStationInfoListDto>();
-        List<BusPath> busPathList = new ArrayList<BusPath>();
+        List<BusPathDto> busPathList = new ArrayList<BusPathDto>();
+        List<BusPosDto> busPosDtoList = new ArrayList<BusPosDto>();
 
         for(int i=0; i<jsonArrayStation.size(); i++){
             JSONObject jsonStation = (JSONObject) jsonArrayStation.get(i);
@@ -52,12 +54,18 @@ public class BusController {
             }
         }
 
-        for(int i=0; i<jsonArrayBusPos.size(); i++){
-            busPathList.add((new BusPath((JSONObject) jsonArrayBusPos.get(i))));
+        for(int i=0; i<jsonArrayBusPath.size(); i++){
+            busPathList.add((new BusPathDto((JSONObject) jsonArrayBusPath.get(i))));
         }
 
+        for(int i=0; i<jsonArrayBusPos.size(); i++){
+            busPosDtoList.add((new BusPosDto((JSONObject) jsonArrayBusPos.get(i))));
+        }
+
+        model.addAttribute("mapCenter", busStationInfoListDtoList.get(0));
         model.addAttribute("busStationList", busStationInfoListDtoList);
         model.addAttribute("busPathList", busPathList);
+        model.addAttribute("busPosList", busPosDtoList);
 
         return "map/mapView";
     }
