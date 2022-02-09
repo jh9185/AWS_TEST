@@ -21,11 +21,11 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model, @LoginUser SessionUser user) {
         model.addAttribute("posts", postsService.findAllDesc());
-        model.addAttribute("buslist", busService.findAllDesc());
+        model.addAttribute("buslist", busService.busListFindAllDesc());
 
         if (user != null) {
             model.addAttribute("loginUserName", user.getName());
-
+            model.addAttribute("loginFavorlite", busService.busFavorliteFind(user.getEmail()));
             if(user.getRegion() != "") {
                 model.addAttribute("loginUserRegion", user.getRegion());
             }

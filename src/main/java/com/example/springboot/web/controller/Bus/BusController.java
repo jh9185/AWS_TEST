@@ -2,13 +2,16 @@ package com.example.springboot.web.controller.Bus;
 
 import com.example.springboot.config.auth.LoginUser;
 import com.example.springboot.config.auth.dto.SessionUser;
+import com.example.springboot.domain.bus.BusFavorite;
 import com.example.springboot.service.bus.BusService;
+import com.example.springboot.web.dto.Bus.BusFavoriteSaveRequestDto;
 import com.example.springboot.web.dto.Bus.BusPathDto;
 import com.example.springboot.web.dto.Bus.BusPosDto;
 import com.example.springboot.web.dto.Bus.BusStationInfoListDto;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,10 +44,10 @@ public class BusController {
         List<BusPathDto> busPathList = new ArrayList<BusPathDto>();
         List<BusPosDto> busPosDtoList = new ArrayList<BusPosDto>();
 
-        for(int i=0; i<jsonArrayStation.size(); i++){
+        for (int i = 0; i < jsonArrayStation.size(); i++) {
             JSONObject jsonStation = (JSONObject) jsonArrayStation.get(i);
 
-            for(int j=0; j<jsonArrayArrive.size(); j++){
+            for (int j = 0; j < jsonArrayArrive.size(); j++) {
                 JSONObject jsonArrive = (JSONObject) jsonArrayArrive.get(j);
                 if (jsonStation.get("arsId").equals(jsonArrive.get("arsId"))) {
 
@@ -54,11 +57,11 @@ public class BusController {
             }
         }
 
-        for(int i=0; i<jsonArrayBusPath.size(); i++){
+        for (int i = 0; i < jsonArrayBusPath.size(); i++) {
             busPathList.add((new BusPathDto((JSONObject) jsonArrayBusPath.get(i))));
         }
 
-        for(int i=0; i<jsonArrayBusPos.size(); i++){
+        for (int i = 0; i < jsonArrayBusPos.size(); i++) {
             busPosDtoList.add((new BusPosDto((JSONObject) jsonArrayBusPos.get(i))));
         }
 
@@ -75,26 +78,53 @@ public class BusController {
         return "/";
     }
 
-    @SuppressWarnings("resource")
-    @RequestMapping(value ="/bus/fileDBUpload", method=RequestMethod.POST)
-    public String insertUploadFile(@LoginUser SessionUser user, MultipartHttpServletRequest request) throws Exception {
+    @PostMapping("/bus/favorite/save")
+    @ResponseBody
+    public Long save(@LoginUser SessionUser user, @RequestBody BusFavoriteSaveRequestDto requestDto) {
+        BusFavorite busFavorite = new BusFavorite(
+                requestDto.getRegion(),
+                requestDto.getName(),
+                requestDto.getNumber(),
+                user.getEmail());
+
+        return busService.favoriteSave(busFavorite);
+    }
+
+    @DeleteMapping("/bus/favorite/delete")
+    @ResponseBody
+    public Long delete(@LoginUser SessionUser user, @RequestBody BusFavoriteSaveRequestDto requestDto) {
+        List<BusFavorite> busFavoriteList = busService.busFavorliteFind(user.getEmail());
+        BusFavorite busFavorite = new BusFavorite();
+
+        for(int i=0; i<busFavoriteList.size(); i++){
+            if(busFavoriteList.get(i).getName().equals(requestDto.getName())){
+                busFavorite = busFavoriteList.get(i);
+                busService.favoriteDelete(busFavorite);
+            }
+        }
+        return busFavorite.getId();
+    }
+
+
+
+    @PostMapping(value = "/bus/fileDBUpload")
+    @ResponseBody
+    public HttpStatus insertUploadFile(@LoginUser SessionUser user, MultipartHttpServletRequest request) throws Exception {
         try {
             if(user.getRole().getKey() == "ROLE_MASTER" ){
                 MultipartFile file = null;
                 Iterator<String> mIterator = request.getFileNames();
-                if(mIterator.hasNext()) {
+                if (mIterator.hasNext()) {
                     file = request.getFile(mIterator.next());
                 }
 
                 busService.readBusNumber(file.getInputStream());
-            }
-            else{
-                return "";
+                return HttpStatus.OK;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "";
+        return HttpStatus.BAD_REQUEST;
     }
 }

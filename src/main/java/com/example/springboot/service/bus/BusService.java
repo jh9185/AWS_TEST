@@ -2,8 +2,13 @@ package com.example.springboot.service.bus;
 
 import com.example.springboot.Component.ApiComponent;
 import com.example.springboot.domain.bus.Bus;
+import com.example.springboot.domain.bus.BusFavorite;
+import com.example.springboot.domain.bus.BusFavoriteRepository;
 import com.example.springboot.domain.bus.BusRepository;
+import com.example.springboot.domain.posts.Posts;
+import com.example.springboot.web.dto.Bus.BusFavoriteSaveRequestDto;
 import com.example.springboot.web.dto.Bus.BusListResponseDto;
+import com.example.springboot.web.dto.Posts.PostsSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -31,6 +36,7 @@ import java.util.stream.Collectors;
 @Service
 public class BusService {
     private final BusRepository busRepository;
+    private final BusFavoriteRepository busFavoriteRepository;
     private final ApiComponent ApiKey;
     // 실시간 노선 데이터 가져오기
     public JSONArray busStationLoadData(Long busRouteId) throws IOException {
@@ -150,7 +156,7 @@ public class BusService {
         JSONArray itemList = new JSONArray();
         return itemList;
     }
-
+    // 버스 노선 경로 위치 데이터 가져오기
     public JSONArray BusStationLoadPathData(Long busRouteId) {
         try {
             StringBuilder urlBuilder = new StringBuilder("http://ws.bus.go.kr/api/rest/busRouteInfo/getRoutePath?" +
@@ -333,14 +339,31 @@ public class BusService {
     }
 
     @Transactional(readOnly = true)
-    public List<BusListResponseDto> findAllDesc() {
+    public List<BusListResponseDto> busListFindAllDesc() {
         return busRepository.findAllDesc().stream()
                 .map(BusListResponseDto::new)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<BusFavorite> busFavorliteFind(String email) {
+        List<BusFavorite> busLists = new ArrayList<>();
+        busFavoriteRepository.findByEmail(email).forEach(e -> busLists.add(e));
+        return busLists;
+    }
+
     @Transactional
     public void deleteByRegion(String region) {
         busRepository.deleteByRegion(region);
+    }
+
+    @Transactional
+    public Long favoriteSave(BusFavorite requestDto) {
+        return busFavoriteRepository.save(requestDto).getId();
+    }
+
+    @Transactional
+    public void favoriteDelete(BusFavorite requestDto) {
+        busFavoriteRepository.delete(requestDto);
     }
 }

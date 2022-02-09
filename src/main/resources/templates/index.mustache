@@ -30,6 +30,36 @@
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
+                                즐겨찾기 목록
+                            </div>
+                            <div class="card-body">
+                                <table id="datatablesSimple" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>지역코드</th>
+                                        <th>버스 ID</th>
+                                        <th>버스 번호</th>
+                                        <th>즐겨찾기 삭제</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {{#loginFavorlite}}
+                                        <tr>
+                                            <td>{{region}}</td>
+                                            <td><a href="/bus/{{name}}">{{name}}</a></td>
+                                            <td>{{number}}</td>
+                                            <td>
+                                                <button onclick="favoriteDelete('{{region}}', '{{name}}', '{{number}}')" type="button" class="btn btn-secondary">삭제</button>
+                                            </td>
+                                        </tr>
+                                    {{/loginFavorlite}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
                                 게시글 목록
                             </div>
                             <div class="card-body">
@@ -65,19 +95,19 @@
                                 버스 목록
                             </div>
                             <div class="card-body">
-                                {{#loginUserName}}
+
                                     <form id="uploadFrm" enctype="multipart/form-data">
                                         <p>데이터 업로드<br>엑셀파일만 업로드 가능(xls, xlsx)</p>
                                         <input type="file" name="upFile" id="upFile" accept=".xlsx, .xls"/>
                                     </form>
 <!--                                    <button type="button" class="btn btn-secondary" id="btn-index-bus-update">버스 정보 업데이트</button>-->
-                                {{/loginUserName}}
                                     <table id="busnumberlist" class="table table-hover">
                                     <thead>
                                     <tr>
                                         <th>지역코드</th>
                                         <th>버스 ID</th>
                                         <th>버스 번호</th>
+                                        <th>즐겨찾기</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -86,6 +116,9 @@
                                             <td>{{region}}</td>
                                             <td><a href="/bus/{{name}}">{{name}}</a></td>
                                             <td>{{number}}</td>
+                                            <td>
+                                                <button onclick="favoriteSave('{{region}}', '{{name}}', '{{number}}')" type="button" class="btn btn-secondary">추가</button>
+                                            </td>
                                         </tr>
                                     {{/buslist}}
                                     </tbody>
