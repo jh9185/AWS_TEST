@@ -28,11 +28,12 @@
                 <div class="col-xl-6">
                     <div class="col-md-12">
                         <div class="card mb-4">
-                            <div class="card-header">
+                            {{#loginUserName}}
+                                <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
                                 즐겨찾기 목록
                             </div>
-                            <div class="card-body">
+                                <div class="card-body">
                                 <table id="datatablesSimple" class="table table-hover">
                                     <thead>
                                     <tr>
@@ -56,6 +57,7 @@
                                     </tbody>
                                 </table>
                             </div>
+                            {{/loginUserName}}
                         </div>
                         <div class="card mb-4">
                             <div class="card-header">
@@ -107,7 +109,9 @@
                                         <th>지역코드</th>
                                         <th>버스 ID</th>
                                         <th>버스 번호</th>
-                                        <th>즐겨찾기</th>
+                                        {{#loginUserName}}
+                                            <th>즐겨찾기</th>
+                                        {{/loginUserName}}
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -116,9 +120,11 @@
                                             <td>{{region}}</td>
                                             <td><a href="/bus/{{name}}">{{name}}</a></td>
                                             <td>{{number}}</td>
+                                        {{#loginUserName}}
                                             <td>
                                                 <button onclick="favoriteSave('{{region}}', '{{name}}', '{{number}}')" type="button" class="btn btn-secondary">추가</button>
                                             </td>
+                                        {{/loginUserName}}
                                         </tr>
                                     {{/buslist}}
                                     </tbody>
