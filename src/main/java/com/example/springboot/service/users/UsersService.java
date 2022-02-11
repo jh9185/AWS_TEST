@@ -36,6 +36,4 @@ public class UsersService {
 
         return new UsersResponseDto(entity);
     }
-
-
 }

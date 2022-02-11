@@ -1,5 +1,6 @@
 package com.example.springboot.web;
 
+import com.example.springboot.Component.ApiComponent;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,13 @@ public class IndexControllerTest {
     public void 메인페이지_로딩() {
         String body = this.restTemplate.getForObject("/", String.class);
 
-        assertThat(body).contains("스프링 부트로 시작하는 웹 서비스");
+        assertThat(body).contains("버스 도착 웹서비스");
+    }
+
+    @Test
+    public void profile_테스트() {
+        String profile = this.restTemplate.getForObject("/profile", String.class);
+
+        assertThat(profile).contains("default");
     }
 }

@@ -61,15 +61,15 @@ public class PostsApiControllerTest {
     }
 
     @Test
-    @WithMockUser(roles="USER")
+    @WithMockUser(roles="GUEST")
     public void Posts_등록된다() throws Exception {
         //given
         String title = "title";
         String content = "content";
         PostsSaveRequestDto requestDto = PostsSaveRequestDto.builder()
                 .title(title)
-                .content(content)
                 .author("author")
+                .content(content)
                 .build();
 
         String url = "http://localhost:" + port + "/api/v1/posts";
@@ -92,7 +92,7 @@ public class PostsApiControllerTest {
     }
 
     @Test
-    @WithMockUser(roles="USER")
+    @WithMockUser(roles="GUEST")
     public void Posts_수정된다() throws Exception {
         //given
         Posts savedPosts = postsRepository.save(Posts.builder()

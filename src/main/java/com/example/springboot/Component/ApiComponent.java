@@ -1,8 +1,10 @@
 package com.example.springboot.Component;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class ApiComponent {
     @Value("${naver-map-key}")
