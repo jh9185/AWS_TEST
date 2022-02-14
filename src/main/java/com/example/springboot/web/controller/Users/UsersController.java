@@ -33,7 +33,7 @@ public class UsersController {
 
     @PostMapping("/user/update/{id}")
     @ResponseBody
-    public Long update(@PathVariable Long id, @RequestBody UsersUpdateRequestDto requestDto, @LoginUser SessionUser user, HttpSession httpSession) {
+    public Long update(@PathVariable Long id, @RequestBody UsersUpdateRequestDto requestDto) {
         return userService.update(id, requestDto); /* 변경된 세션 등록 */
     }
 
