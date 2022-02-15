@@ -2,6 +2,7 @@ package com.example.springboot.web.controller.Bus;
 
 import com.example.springboot.config.auth.LoginUser;
 import com.example.springboot.config.auth.dto.SessionUser;
+import com.example.springboot.domain.bus.Bus;
 import com.example.springboot.domain.bus.BusFavorite;
 import com.example.springboot.service.bus.BusService;
 import com.example.springboot.web.dto.Bus.BusFavoriteSaveRequestDto;
@@ -35,40 +36,85 @@ public class BusController {
 
     @GetMapping("/bus/{busrouteid}")
     public String busStationSearch(@PathVariable Long busrouteid, Model model) throws IOException {
-        JSONArray jsonArrayStation = busService.busStationLoadData(busrouteid);
-        JSONArray jsonArrayArrive = busService.BusStationLoadArriveData(busrouteid);
-        JSONArray jsonArrayBusPath = busService.BusStationLoadPathData(busrouteid);
-        JSONArray jsonArrayBusPos = busService.BusLoadPosData(busrouteid);
+
+        Bus busInfo = busService.busFindName(busrouteid);
+
+        JSONArray jsonArrayStation = new JSONArray();
+        JSONArray jsonArrayArrive = new JSONArray();
+        JSONArray jsonArrayBusPath = new JSONArray();
+        JSONArray jsonArrayBusPos = new JSONArray();
 
         List<BusStationInfoListDto> busStationInfoListDtoList = new ArrayList<BusStationInfoListDto>();
         List<BusPathDto> busPathList = new ArrayList<BusPathDto>();
         List<BusPosDto> busPosDtoList = new ArrayList<BusPosDto>();
 
-        for (int i = 0; i < jsonArrayStation.size(); i++) {
-            JSONObject jsonStation = (JSONObject) jsonArrayStation.get(i);
+        if(busInfo.getRegion().substring(0,2).equals("서울")){
+            jsonArrayStation = busService.busStationSeoulLoadData(busrouteid);
+            jsonArrayArrive = busService.BusStationSeoulLoadArriveData(busrouteid);
+            jsonArrayBusPath = busService.BusStationSeoulLoadPathData(busrouteid);
+            jsonArrayBusPos = busService.BusSeoulLoadPosData(busrouteid);
 
-            for (int j = 0; j < jsonArrayArrive.size(); j++) {
-                JSONObject jsonArrive = (JSONObject) jsonArrayArrive.get(j);
-                if (jsonStation.get("arsId").equals(jsonArrive.get("arsId"))) {
+            for (int i = 0; i < jsonArrayStation.size(); i++) {
+                JSONObject jsonStation = (JSONObject) jsonArrayStation.get(i);
 
-                    busStationInfoListDtoList.add(new BusStationInfoListDto(jsonStation, jsonArrive));
-                    break;
+                for (int j = 0; j < jsonArrayArrive.size(); j++) {
+                    JSONObject jsonArrive = (JSONObject) jsonArrayArrive.get(j);
+                    if (jsonStation.get("arsId").equals(jsonArrive.get("arsId"))) {
+
+                        busStationInfoListDtoList.add(new BusStationInfoListDto(jsonStation, jsonArrive));
+                        break;
+                    }
                 }
             }
-        }
 
-        for (int i = 0; i < jsonArrayBusPath.size(); i++) {
-            busPathList.add((new BusPathDto((JSONObject) jsonArrayBusPath.get(i))));
-        }
+            for (int i = 0; i < jsonArrayBusPath.size(); i++) {
+                busPathList.add((new BusPathDto((JSONObject) jsonArrayBusPath.get(i))));
+            }
 
-        for (int i = 0; i < jsonArrayBusPos.size(); i++) {
-            busPosDtoList.add((new BusPosDto((JSONObject) jsonArrayBusPos.get(i))));
-        }
+            for (int i = 0; i < jsonArrayBusPos.size(); i++) {
+                busPosDtoList.add((new BusPosDto((JSONObject) jsonArrayBusPos.get(i))));
+            }
 
-        model.addAttribute("mapCenter", busStationInfoListDtoList.get(0));
-        model.addAttribute("busStationList", busStationInfoListDtoList);
-        model.addAttribute("busPathList", busPathList);
-        model.addAttribute("busPosList", busPosDtoList);
+            model.addAttribute("mapCenter", busStationInfoListDtoList.get(0));
+            model.addAttribute("busStationList", busStationInfoListDtoList);
+            model.addAttribute("busPathList", busPathList);
+            model.addAttribute("busPosList", busPosDtoList);
+        }
+        else{
+            jsonArrayStation = busService.busStationGGDLoadData(busrouteid);
+//            jsonArrayArrive = busService.BusStationGGDLoadArriveData(busrouteid);
+            jsonArrayBusPath = busService.BusStationGGDLoadPathData(busrouteid);
+//            jsonArrayBusPos = busService.BusGGDLoadPosData(busrouteid);
+
+            for (int i = 0; i < jsonArrayStation.size(); i++) {
+                JSONObject jsonStation = (JSONObject) jsonArrayStation.get(i);
+
+                        busStationInfoListDtoList.add(new BusStationInfoListDto((Long) jsonStation.get("stationSeq"),
+                                String.valueOf(jsonStation.get("stationId")),
+                                String.valueOf(jsonStation.get("stationName")),
+                                String.valueOf(jsonStation.get("mobileNo")),
+                                (double) jsonStation.get("x"),
+                                (double) jsonStation.get("y"),
+                                busInfo.getNumber(), (Long) busrouteid,
+                                String.valueOf(jsonStation.get("turnYn")),
+                                "","","","",""
+                        ));
+            }
+
+            for (int i = 0; i < jsonArrayBusPath.size(); i++) {
+                JSONObject jsonObject = (JSONObject) jsonArrayBusPath.get(i);
+                busPathList.add((new BusPathDto((Long)jsonObject.get("lineSeq"), (double) jsonObject.get("x"), (double) jsonObject.get("y"))));
+            }
+//
+//            for (int i = 0; i < jsonArrayBusPos.size(); i++) {
+//                busPosDtoList.add((new BusPosDto((JSONObject) jsonArrayBusPos.get(i))));
+//            }
+
+            model.addAttribute("mapCenter", busStationInfoListDtoList.get(0));
+            model.addAttribute("busStationList", busStationInfoListDtoList);
+            model.addAttribute("busPathList", busPathList);
+//            model.addAttribute("busPosList", busPosDtoList);
+        }
 
         return "map/mapView";
     }
@@ -111,7 +157,7 @@ public class BusController {
     @ResponseBody
     public HttpStatus insertUploadFile(@LoginUser SessionUser user, MultipartHttpServletRequest request) throws Exception {
         try {
-            if(user.getRole().getKey() == "ROLE_MASTER" ){
+            if(user.getRole().getKey() == "ROLE_GUEST" ){
                 MultipartFile file = null;
                 Iterator<String> mIterator = request.getFileNames();
                 if (mIterator.hasNext()) {

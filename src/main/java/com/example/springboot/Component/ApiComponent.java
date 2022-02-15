@@ -12,11 +12,60 @@ public class ApiComponent {
     @Value("${seoul-data-key}")
     private String busApiKey;
 
+    @Value("http://ws.bus.go.kr/api/rest/busRouteInfo/getStaionByRoute?")
+    private String busApiSeoulRoutePath;
+
+    @Value("http://ws.bus.go.kr/api/rest/arrive/getArrInfoByRouteAll?")
+    private String busApiSeoulArrInfoPath;
+
+    @Value("http://ws.bus.go.kr/api/rest/busRouteInfo/getRoutePath?")
+    private String busApiSeoulAllRoutePath;
+
+    @Value("http://ws.bus.go.kr/api/rest/buspos/getBusPosByRtid?")
+    private String busApiSeoulBusPosPath;
+
+    @Value("http://apis.data.go.kr/6410000/busrouteservice/getBusRouteStationList?")
+    private String busApiGGDRoutePath;
+
+    @Value("http://apis.data.go.kr/6410000/busarrivalservice/getBusArrivalList?")
+    private String busApiGGDArrInfoPath;
+
+    @Value("http://apis.data.go.kr/6410000/busrouteservice/getBusRouteLineList?")
+    private String busApiGGDAllRoutePath;
+
+
     public String getMapApiKey() {
         return mapApiKey;
     }
 
     public String getBusApiKey() {
         return busApiKey;
+    }
+
+    public String getBusApiSeoulRoutePath() {
+        return busApiSeoulRoutePath;
+    }
+
+    public String getBusApiSeoulArrInfoPath() {
+        return busApiSeoulArrInfoPath;
+    }
+
+    public String getBusApiSeoulAllRoutePath() {
+        return busApiSeoulAllRoutePath;
+    }
+
+    public String getBusApiSeoulBusPosPath() {
+        return busApiSeoulBusPosPath;
+    }
+
+    public String getBusApiGGDRoutePath() {
+        return busApiGGDRoutePath;
+    }
+
+    public String getBusApiGGDArrInfoPath() {
+        return busApiGGDArrInfoPath;
+    }
+    public String getBusApiGGDAllRoutePath() {
+        return busApiGGDAllRoutePath;
     }
 }

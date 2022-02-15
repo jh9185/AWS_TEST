@@ -12,4 +12,11 @@ public class BusPathDto {
         this.gpsX = (double) jsonObjectBusPos.get("gpsX");
         this.gpsY = (double) jsonObjectBusPos.get("gpsY");
     }
+
+    public BusPathDto(Long no, double gpsX, double gpsY){
+        this.no = no;
+        this.gpsX = gpsX;
+        this.gpsY = gpsY;
+    }
+
 }

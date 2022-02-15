@@ -39,4 +39,25 @@ public class BusStationInfoListDto {
         this.plainNo1 = String.valueOf(jsonObjectArrive.get("plainNo1"));
         this.plainNo2 = String.valueOf(jsonObjectArrive.get("plainNo2"));
     }
+
+    public BusStationInfoListDto(Long seq, String arsId, String stStationNm, String stationNo,
+                                 double gpsX, double gpsY, String busRouteNm, Long busRouteId, String transYn,
+                                 String arrmsg1, String arrmsg2, String stNm, String plainNo1, String plainNo2
+                                 ){
+        this.seq = seq;
+        this.arsId = arsId;
+        this.stStationNm = stStationNm;
+        this.stationNo = stationNo;
+        this.gpsX = gpsX;
+        this.gpsY = gpsY;
+        this.busRouteNm = busRouteNm;
+        this.busRouteId = busRouteId;
+        this.transYn = transYn;
+
+        this.arrmsg1 = arrmsg1;
+        this.arrmsg2 = arrmsg2;
+        this.stationNm = stNm;
+        this.plainNo1 = plainNo1;
+        this.plainNo2 = plainNo2;
+    }
 }
