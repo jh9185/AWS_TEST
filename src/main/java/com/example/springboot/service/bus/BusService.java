@@ -572,6 +572,13 @@ public class BusService {
     }
 
     @Transactional(readOnly = true)
+    public List<BusListResponseDto> busListFindAllAsc() {
+        return busRepository.findAllAsc().stream()
+                .map(BusListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public List<BusFavorite> busFavorliteFind(String email) {
         List<BusFavorite> busLists = new ArrayList<>();
         busFavoriteRepository.findByEmail(email).forEach(e -> busLists.add(e));

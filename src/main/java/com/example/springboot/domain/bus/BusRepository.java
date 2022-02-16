@@ -13,6 +13,10 @@ public interface BusRepository extends JpaRepository<Bus, Long> {
     @Query("SELECT p FROM Bus p ORDER BY p.id DESC")
     List<Bus> findAllDesc();
 
+    @Query("SELECT p FROM Bus p ORDER BY p.id ASC")
+    List<Bus> findAllAsc();
+
+
     @Query("DELETE FROM Bus WHERE region= :strRegion")
     void deleteByRegion(@Param("strRegion") String region);
 
