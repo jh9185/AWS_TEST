@@ -27,12 +27,14 @@ public class ApiComponent {
     @Value("http://apis.data.go.kr/6410000/busrouteservice/getBusRouteStationList?")
     private String busApiGGDRoutePath;
 
-    @Value("http://apis.data.go.kr/6410000/busarrivalservice/getBusArrivalList?")
+    @Value("http://apis.data.go.kr/6410000/busarrivalservice/getBusArrivalItem?")
     private String busApiGGDArrInfoPath;
 
     @Value("http://apis.data.go.kr/6410000/busrouteservice/getBusRouteLineList?")
     private String busApiGGDAllRoutePath;
 
+    @Value("http://apis.data.go.kr/6410000/buslocationservice/getBusLocationList?")
+    private String busApiGGDBusPosPath;
 
     public String getMapApiKey() {
         return mapApiKey;
@@ -67,5 +69,9 @@ public class ApiComponent {
     }
     public String getBusApiGGDAllRoutePath() {
         return busApiGGDAllRoutePath;
+    }
+
+    public String getBusApiGGDBusPosPath() {
+        return busApiGGDBusPosPath;
     }
 }

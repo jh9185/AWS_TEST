@@ -227,14 +227,15 @@ public class BusService {
         JSONArray itemList = new JSONArray();
         return itemList;
     }
-
-    public JSONArray BusStationGGDLoadArriveData(Long busRouteId){
+    public JSONArray BusStationGGDLoadArriveData(Long stationId, Long busRouteId, Long strOrder){
         try {
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.append(ApiKey.getBusApiGGDArrInfoPath());
             urlBuilder.append("serviceKey=" + ApiKey.getBusApiKey());
-            urlBuilder.append("&" + URLEncoder.encode("routeId", "UTF-8") + "=" + busRouteId); /**/
-
+            urlBuilder.append("&" + URLEncoder.encode("stationId", "UTF-8") + "=" + stationId.toString());
+            urlBuilder.append("&" + URLEncoder.encode("routeId", "UTF-8") + "=" + busRouteId.toString());
+            urlBuilder.append("&" + URLEncoder.encode("staOrder", "UTF-8") + "=" + strOrder.toString());
+            /**/
             URL url = new URL(urlBuilder.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -261,27 +262,11 @@ public class BusService {
 
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonObject = (JSONObject)jsonParser.parse(xmlJSONObjString);
-            JSONObject busStationInfoResult = (JSONObject)jsonObject.get("ServiceResult");
+            JSONObject busStationInfoResult = (JSONObject)jsonObject.get("response");
             JSONObject busStationInfo = (JSONObject)busStationInfoResult.get("msgBody");
 
-            JSONArray itemList = (JSONArray)busStationInfo.get("itemList");
-
-//            for (int i =0; i<BusStationVos.size(); i++){
-//                BusStationVo busStationVo = BusStationVos.get(i);
-//
-//                JSONObject detailInfo = (JSONObject)itemList.get(i);
-//                System.out.println("도착정보  : " + detailInfo.get("arrmsg1"));
-//                System.out.println("도착정보2  : " + detailInfo.get("arrmsg2"));
-//                System.out.println("정류장이름  : " + detailInfo.get("stNm"));
-//                System.out.println("버스번호  : " + detailInfo.get("plainNo1"));
-//                System.out.println("버스번호2  : " + detailInfo.get("plainNo2"));
-//                if(detailInfo.get("stNm").equals(busStationVo.getStStationNm())){
-//                    busStationVo.setArrmsg((String) detailInfo.get("arrmsg1"));
-//                    busStationVo.setArrmsg2((String) detailInfo.get("arrmsg2"));
-//                    busStationVo.setPlainNo1((String) detailInfo.get("plainNo1"));
-//                    busStationVo.setPlainNo2((String) detailInfo.get("plainNo2"));
-//                }
-//            }
+            JSONArray itemList = new JSONArray();
+                    itemList.add(busStationInfo.get("busArrivalItem"));
 
             return itemList;
         } catch (Exception e) {
@@ -453,9 +438,9 @@ public class BusService {
     public JSONArray BusGGDLoadPosData(Long busRouteId){
         try {
             StringBuilder urlBuilder = new StringBuilder();
-            urlBuilder.append(ApiKey.getBusApiSeoulBusPosPath());
+            urlBuilder.append(ApiKey.getBusApiGGDBusPosPath());
             urlBuilder.append("serviceKey=" + ApiKey.getBusApiKey());
-            urlBuilder.append("&" + URLEncoder.encode("busRouteId", "UTF-8") + "=" + busRouteId.toString()); /**/
+            urlBuilder.append("&" + URLEncoder.encode("routeId", "UTF-8") + "=" + busRouteId.toString()); /**/
             URL url = new URL(urlBuilder.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -482,22 +467,10 @@ public class BusService {
 
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonObject = (JSONObject)jsonParser.parse(xmlJSONObjString);
-            JSONObject busStationInfoResult = (JSONObject)jsonObject.get("ServiceResult");
+            JSONObject busStationInfoResult = (JSONObject)jsonObject.get("response");
             JSONObject busStationInfo = (JSONObject)busStationInfoResult.get("msgBody");
 
-            JSONArray itemList = (JSONArray)busStationInfo.get("itemList");
-
-//            for (int i =0; i<itemList.size(); i++){
-//                VehId vehId = new VehId("", 0, 0);
-//
-//                JSONObject detailInfo = (JSONObject)itemList.get(i);
-//
-//                vehId.setPlainNo((String) detailInfo.get("plainNo"));
-//                vehId.setPosX((Double) detailInfo.get("gpsX"));
-//                vehId.setPosY((Double) detailInfo.get("gpsY"));
-//
-//                VehIdList.add(vehId);
-//            }
+            JSONArray itemList = (JSONArray)busStationInfo.get("busLocationList");
 
             return itemList;
         } catch (Exception e) {

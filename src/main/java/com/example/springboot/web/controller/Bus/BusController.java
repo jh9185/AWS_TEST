@@ -36,7 +36,7 @@ public class BusController {
 
     @GetMapping("/bus/{busrouteid}")
     public String busStationSearch(@PathVariable Long busrouteid, Model model) throws IOException {
-
+        boolean bFind = false;
         Bus busInfo = busService.busFindName(busrouteid);
 
         JSONArray jsonArrayStation = new JSONArray();
@@ -48,7 +48,11 @@ public class BusController {
         List<BusPathDto> busPathList = new ArrayList<BusPathDto>();
         List<BusPosDto> busPosDtoList = new ArrayList<BusPosDto>();
 
-        if(busInfo.getRegion().substring(0,2).equals("서울")){
+        jsonArrayStation = busService.busStationSeoulLoadData(busrouteid);
+        if((jsonArrayStation != null) && (jsonArrayStation.size() != 0))
+            bFind = true;
+
+        if(busInfo.getRegion().substring(0,2).equals("서울") || bFind)  {
             jsonArrayStation = busService.busStationSeoulLoadData(busrouteid);
             jsonArrayArrive = busService.BusStationSeoulLoadArriveData(busrouteid);
             jsonArrayBusPath = busService.BusStationSeoulLoadPathData(busrouteid);
@@ -82,23 +86,55 @@ public class BusController {
         }
         else{
             jsonArrayStation = busService.busStationGGDLoadData(busrouteid);
-//            jsonArrayArrive = busService.BusStationGGDLoadArriveData(busrouteid);
             jsonArrayBusPath = busService.BusStationGGDLoadPathData(busrouteid);
-//            jsonArrayBusPos = busService.BusGGDLoadPosData(busrouteid);
+            jsonArrayBusPos = busService.BusGGDLoadPosData(busrouteid);
+
+            List<Long> stationSeq = new ArrayList<Long>();
+
+            if(jsonArrayBusPos != null){
+                for(int j=0; j<jsonArrayBusPos.size(); j++){
+                    JSONObject jsonBus = (JSONObject)jsonArrayBusPos.get(j);
+                    stationSeq.add((Long) jsonBus.get("stationSeq"));
+                }
+            }
 
             for (int i = 0; i < jsonArrayStation.size(); i++) {
                 JSONObject jsonStation = (JSONObject) jsonArrayStation.get(i);
 
+                if(stationSeq.indexOf((Long) jsonStation.get("stationSeq")) != -1) {
+                    Long stationId = (Long) jsonStation.get("stationId");
+                    Long staOrder = (Long) jsonStation.get("stationSeq");
+                    jsonArrayArrive = busService.BusStationGGDLoadArriveData(stationId, busrouteid, staOrder);
+                    if((jsonArrayArrive != null) && (jsonArrayArrive.size() != 0 )){
+                        JSONObject jsonArrive = (JSONObject) jsonArrayArrive.get(0);
                         busStationInfoListDtoList.add(new BusStationInfoListDto((Long) jsonStation.get("stationSeq"),
                                 String.valueOf(jsonStation.get("stationId")),
                                 String.valueOf(jsonStation.get("stationName")),
-                                String.valueOf(jsonStation.get("mobileNo")),
+                                String.valueOf(jsonStation.get("stationId")),
                                 (double) jsonStation.get("x"),
                                 (double) jsonStation.get("y"),
                                 busInfo.getNumber(), (Long) busrouteid,
                                 String.valueOf(jsonStation.get("turnYn")),
-                                "","","","",""
+                                String.valueOf(jsonArrive.get("predictTime1") + "분 후 도착"),
+                                String.valueOf(jsonArrive.get("predictTime2") + "분 후 도착"), "",
+                                String.valueOf(jsonArrive.get("plateNo1")),
+                                String.valueOf(jsonArrive.get("plateNo2"))
                         ));
+                    }
+
+                }
+                else{
+                    busStationInfoListDtoList.add(new BusStationInfoListDto((Long) jsonStation.get("stationSeq"),
+                            String.valueOf(jsonStation.get("stationId")),
+                            String.valueOf(jsonStation.get("stationName")),
+                            String.valueOf(jsonStation.get("stationId")),
+                            (double) jsonStation.get("x"),
+                            (double) jsonStation.get("y"),
+                            busInfo.getNumber(), (Long) busrouteid,
+                            String.valueOf(jsonStation.get("turnYn")),
+                            "","", "", "","")
+                    );
+                }
             }
 
             for (int i = 0; i < jsonArrayBusPath.size(); i++) {
@@ -157,7 +193,7 @@ public class BusController {
     @ResponseBody
     public HttpStatus insertUploadFile(@LoginUser SessionUser user, MultipartHttpServletRequest request) throws Exception {
         try {
-            if(user.getRole().getKey() == "ROLE_GUEST" ){
+            if(user.getRole().getKey() == "ROLE_MASTER" ){
                 MultipartFile file = null;
                 Iterator<String> mIterator = request.getFileNames();
                 if (mIterator.hasNext()) {
