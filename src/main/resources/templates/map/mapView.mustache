@@ -25,7 +25,21 @@
 <div class="container">
     <div id="map" style="width:100%;height:400px;">
     </div>
+    <div class="navbar-brand ps-3" id="clock">00:00:00</div>
+
     <script inline="javascript">
+        const clock = document.getElementById("clock");
+
+        function getClock(){
+            const date = new Date()
+            const hour = String(date.getHours()).padStart(2,"0");
+            const minutes = String(date.getMinutes()).padStart(2,"0");
+            const second = String(date.getSeconds()).padStart(2,"0");//number이기 때문에 padStart 붙일 수 없음. String 변환해주어야한다.
+            clock.innerText = `현재 시간 : ${hour}:${minutes}:${second}`;
+        }
+        getClock();
+        setInterval(getClock, 1000);
+
         {{#mapCenter}}
             map = new naver.maps.Map('map', {
                 center: new naver.maps.LatLng({{gpsY}}, {{gpsX}}),
