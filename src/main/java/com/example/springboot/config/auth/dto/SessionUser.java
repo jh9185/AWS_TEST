@@ -13,6 +13,7 @@ public class SessionUser implements Serializable {
     private String picture;
     private String region;
     private Role role;
+    private String login;
 
     public SessionUser(Users user){
         this.name = user.getName();
@@ -20,5 +21,6 @@ public class SessionUser implements Serializable {
         this.picture = user.getPicture();
         this.region = user.getRegion();
         this.role = user.getRole();
+        this.login = user.getLogin();
     }
 }
